@@ -1,0 +1,12 @@
+db.sqlite3
+
+# Environments
+venv
+.git
+.env
+
+# Папки, создаваемые средой разработки
+.idea
+
+# папки со статикой и медиа
+media/
