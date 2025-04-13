@@ -2,6 +2,7 @@
 volumes:
   pg_data:
   static:
+  media:
 
 # Перечень контейнеров
 services:
@@ -16,6 +17,7 @@ services:
     env_file: .env
     volumes:
       - static:/backend_static
+      - media:/media/
     depends_on:
       - db
 
@@ -29,6 +31,7 @@ services:
     build: ./infra/
     volumes:
       - static:/staticfiles/
+      - media:/etc/nginx/html/media/
     ports:
       - 8000:80
     depends_on:
