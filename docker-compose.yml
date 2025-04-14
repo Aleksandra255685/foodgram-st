@@ -23,12 +23,12 @@ services:
 
   frontend:
     env_file: .env
-    image: amv13/foodgram_gateway:latest
+    image: amv13/foodgram_frontend:latest
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
   gateway:
-    build: ./infra/
+    image: amv13/foodgram_gateway:latest
     volumes:
       - static:/staticfiles/
       - media:/etc/nginx/html/media/
