@@ -1,51 +1,39 @@
 from django.contrib import admin
-from django.contrib.admin import ModelAdmin, register
-
-from .models import (Favorite, Ingredient, IngredientInRecipe, Recipe,
-                     ShoppingCart)
-from users.models import Subscription
+from .models import (
+    Ingredient, Recipe, RecipeIngredient, Favorite, ShoppingCart
+)
 
 
-@register(Ingredient)
-class IngredientAdmin(ModelAdmin):
-    list_display = ("pk", "name", "measurement_unit")
-    search_fields = ("name",)
+class RecipeIngredientInline(admin.TabularInline):
+    model = RecipeIngredient
+    extra = 1
 
 
-class IngredientInRecipeInline(admin.TabularInline):
-    model = IngredientInRecipe
-    min_num = 1
+@admin.register(Recipe)
+class RecipeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'author', 'favorites_count')
+    search_fields = ('name', 'author__username')
+    list_filter = ('author', 'name')
+    inlines = (RecipeIngredientInline,)
+
+    def favorites_count(self, obj):
+        return obj.favorited_by.count()
+    favorites_count.short_description = 'В избранном'
 
 
-@register(Recipe)
-class RecipeAdmin(ModelAdmin):
-    list_display = ("pk", "name", "author", "get_favorites", "created")
-    list_filter = ("author", "name")
-    search_fields = ("name", "author__username")
-    inlines = [IngredientInRecipeInline]
-
-    @admin.display(description="Количество добавлений рецепта в избранное")
-    def get_favorites(self, obj):
-        return obj.favorites.count()
+@admin.register(Ingredient)
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'measurement_unit')
+    search_fields = ('name',)
 
 
-@register(IngredientInRecipe)
-class IngredientInRecipe(ModelAdmin):
-    list_display = ("pk", "recipe", "ingredient", "amount")
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'recipe')
+    search_fields = ('user__username', 'recipe__name')
 
 
-@register(ShoppingCart)
-class ShoppingCartAdmin(ModelAdmin):
-    list_display = ("pk", "user", "recipe")
-
-
-@register(Subscription)
-class SubscriptionAdmin(ModelAdmin):
-    list_display = ("pk", "subscriber", "author")
-    search_fields = ("subscriber__username", "author__username")
-    list_filter = ("subscriber", "author")
-
-
-@register(Favorite)
-class FavoriteAdmin(ModelAdmin):
-    list_display = ("pk", "user", "recipe")
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(admin.ModelAdmin):
+    list_display = ('user', 'recipe')
+    search_fields = ('user__username', 'recipe__name')

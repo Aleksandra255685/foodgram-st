@@ -1,48 +1,58 @@
 from rest_framework import serializers
+from .models import User, Subscription
+from core.fields import Base64ImageField
+from djoser.serializers import UserSerializer
 
-from api.serializers import UserProfileSerializer
-from recipes.serializers import ShortRecipeSerializer
-from .models import Subscription
+
+class CustomUserSerializer(UserSerializer):
+    avatar = Base64ImageField()
+    is_subscribed = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            'id', 'email', 'username',
+            'first_name', 'last_name',
+            'is_subscribed', 'avatar'
+        )
+
+    def get_is_subscribed(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return Subscription.objects.filter(user=request.user,
+                                               author=obj).exists()
+        return False
 
 
-class SubscriptionSerializer(UserProfileSerializer):
-    recipes = serializers.SerializerMethodField(method_name="get_recipes")
-    recipes_count = serializers.ReadOnlyField(source="recipes.count")
+class AvatarSerializer(serializers.ModelSerializer):
+    avatar = Base64ImageField()
 
-    class Meta(UserProfileSerializer.Meta):
-        fields = UserProfileSerializer.Meta.fields + (
-            "recipes",
-            "recipes_count",
+    class Meta:
+        model = User
+        fields = ('avatar',)
+
+
+class SubscriptionSerializer(CustomUserSerializer):
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            'id', 'email', 'username',
+            'first_name', 'last_name',
+            'avatar', 'is_subscribed',
+            'recipes', 'recipes_count',
         )
 
     def get_recipes(self, obj):
-        request = self.context.get("request")
-        recipes = obj.recipes.all()
-        recipes_limit = request.query_params.get("recipes_limit")
+        from recipes.serializers import RecipeShortSerializer
+        request = self.context.get('request')
+        limit = request.query_params.get('recipes_limit')
+        queryset = obj.recipes.all()
+        if limit:
+            queryset = queryset[:int(limit)]
+        return RecipeShortSerializer(queryset, many=True).data
 
-        if recipes_limit and recipes_limit.isdigit():
-            try:
-                recipes = recipes[:int(recipes_limit)]
-            except ValueError:
-                pass
-
-        return ShortRecipeSerializer(
-            recipes, context={"request": request}, many=True
-        ).data
-
-
-class CreateSubscriptionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subscription
-        fields = (
-            "author",
-            "subscriber",
-        )
-
-    def validate(self, data):
-        if data["subscriber"] == data["author"]:
-            raise serializers.ValidationError(
-                "Вы пытаетесь подписаться на себя!"
-            )
-
-        return data
+    def get_recipes_count(self, obj):
+        return obj.recipes.count()

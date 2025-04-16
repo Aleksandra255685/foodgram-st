@@ -1,30 +1,17 @@
 from django.contrib import admin
-from django.contrib.admin import register
-from django.contrib.auth.admin import UserAdmin
-
-from .models import User
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .models import User, Subscription
 
 
-@register(User)
-class MyUserAdmin(UserAdmin):
-    list_display = (
-        "pk",
-        "username",
-        "email",
-        "first_name",
-        "last_name",
-        "password",
-        "avatar",
-        "recipes_count",
-        "subscribers_count",
-    )
+@admin.register(User)
+class UserAdmin(BaseUserAdmin):
+    list_display = ('id', 'email', 'username', 'first_name', 'last_name')
     list_filter = ("username", "email")
-    search_fields = ("username", "email")
+    search_fields = ('email', 'username')
+    ordering = ('id',)
 
-    @admin.display(description="Количество рецептов")
-    def recipes_count(self, obj):
-        return obj.recipes.count()
 
-    @admin.display(description="Количество подписчиков")
-    def subscribers_count(self, obj):
-        return obj.subscriptions_where_author.count()
+@admin.register(Subscription)
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('user', 'author')
+    search_fields = ('user__username', 'author__username')

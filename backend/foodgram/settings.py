@@ -4,7 +4,6 @@ from django.core.management.utils import get_random_secret_key
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 SECRET_KEY = os.getenv("SECRET_KEY", get_random_secret_key())
 
 DEBUG = os.getenv("DEBUG", default="True").lower() == "true"
@@ -19,12 +18,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'rest_framework.authtoken',
     'djoser',
-    'django_filters',
-    'api.apps.ApiConfig',
-    'users.apps.UsersConfig',
-    'recipes.apps.RecipesConfig',
+    'users',
+    'recipes',
+    'api',
+    'core'
 ]
 
 MIDDLEWARE = [
@@ -67,7 +67,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_USER_MODEL = "users.User"
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -91,8 +90,6 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
 STATIC_URL = '/static/'
@@ -105,14 +102,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.AllowAny',
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-
-    'DEFAULT_PAGINATION_CLASS': 'api.pagination.MainPagePagination',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 6,
     'SEARCH_PARAM': 'name',
 }
@@ -120,15 +117,13 @@ REST_FRAMEWORK = {
 DJOSER = {
     "LOGIN_FIELD": "email",
     "HIDE_USERS": False,
-    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": False,
-    "TOKEN_MODEL": "rest_framework.authtoken.models.Token",
     "SERIALIZERS": {
-        "user": "api.serializers.UserProfileSerializer",
-        "user_create": "api.serializers.CreateUserProfileSerializer",
-        "current_user": "api.serializers.UserProfileSerializer",
+        'user': 'users.serializers.CustomUserSerializer',
+        'current_user': 'users.serializers.CustomUserSerializer',
     },
     "PERMISSIONS": {
-        "user": ["djoser.permissions.CurrentUserOrAdminOrReadOnly"],
+        "user": ["rest_framework.permissions.AllowAny"],
         "user_list": ["rest_framework.permissions.AllowAny"],
+        "current_user": ["djoser.permissions.CurrentUserOrAdmin"],
     },
 }
