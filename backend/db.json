@@ -1,5 +1,59 @@
 [
 {
+  "model": "authtoken.token",
+  "pk": "23ec347a25e6b8ebd5381415282fed2a8a3947e5",
+  "fields": {
+    "user": 2,
+    "created": "2025-04-16T16:46:51.661Z"
+  }
+},
+{
+  "model": "users.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$X8tArl0lMvZIASwvgaBwWf$zyBeReJ9rLAlrkDvQuDmaHqXbNME4BI9c3dqLhwD4uc=",
+    "last_login": "2025-04-16T16:40:37.777Z",
+    "is_superuser": false,
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-04-16T16:40:35.149Z",
+    "email": "aann@mail.ru",
+    "first_name": "Анна",
+    "last_name": "Максимова",
+    "avatar": "avatars/temp.jpeg",
+    "username": "annnnnaaaaa",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$ee8qv25gizDQuXz9V5Jwun$AwszIC/MoDXeT7xroLHThg91WQd9nIoIKxQxUMN9Vy8=",
+    "last_login": "2025-04-16T16:46:51.673Z",
+    "is_superuser": false,
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-04-16T16:46:46.890Z",
+    "email": "iipp542@mail.ru",
+    "first_name": "Иван",
+    "last_name": "Петров",
+    "avatar": "",
+    "username": "iipp542",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.subscription",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "author": 1
+  }
+},
+{
   "model": "recipes.ingredient",
   "pk": 1,
   "fields": {
@@ -17493,6 +17547,138 @@
   "fields": {
     "name": "ячневая крупа",
     "measurement_unit": "г"
+  }
+},
+{
+  "model": "recipes.recipe",
+  "pk": 1,
+  "fields": {
+    "author": 1,
+    "name": "Овсяное печенье с шоколадом",
+    "image": "recipes/images/temp.webp",
+    "text": "Достаньте масло из холодильника примерно за час, чтобы оно успело стать мягким. Просейте муку.  Взбейте мягкое сливочное масло с сахаром до пышной светлой массы. Разбейте яйцо в масляную смесь и взбейте еще раз, пока масса не станет однородной. Добавьте в тесто измельченный шоколад и тщательно перемешайте, чтобы он распределился равномерно.  Всыпьте овсяные хлопья. Перемешайте. Понемногу добавьте муку и перемешайте руками. Когда тесто станет однородным, разделите его на небольшие комочки. Выложите шарики из теста на противень, застеленный пергаментом. Отправьте печенье выпекаться на 15 минут при температуре 180 °C. Затем дайте им немного остыть и затвердеть и лишь затем снимите с противня.",
+    "cooking_time": 45,
+    "pub_date": "2025-04-16T16:44:21.699Z"
+  }
+},
+{
+  "model": "recipes.recipe",
+  "pk": 2,
+  "fields": {
+    "author": 2,
+    "name": "Чипсы из лаваша",
+    "image": "recipes/images/temp_GeSjBaa.webp",
+    "text": "Подготовьте лаваш. Нарежьте белый тонкий лаваш кухонными ножницами на небольшие кусочки. Мелко нарубите ножом укроп. Чеснок и сыр натрите на мелкой терке. Приготовьте соус. Смешайте оливковое масло с измельченным укропом и натертым чесноком. Соль и перец добавьте по вкусу. Засушите чипсы. Застелите противень пергаментом. Разложите кусочки лаваша на некотором расстоянии друг от друга. Смажьте каждый кусочек чесночным соусом, слегка посыпьте слайсы тертым сыром. Разогрейте духовку до 180℃. Запекайте чипсы 5-7 минут. Постоянно наблюдайте за приготовлением блюда, чтобы слайсы из лаваша не подгорели. Подрумяненные чипсы достаньте из духовки и дайте им остыть.",
+    "cooking_time": 25,
+    "pub_date": "2025-04-16T16:49:50.671Z"
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 1,
+  "fields": {
+    "recipe": 1,
+    "ingredient": 1091,
+    "amount": 130
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 2,
+  "fields": {
+    "recipe": 1,
+    "ingredient": 1134,
+    "amount": 80
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 3,
+  "fields": {
+    "recipe": 1,
+    "ingredient": 1546,
+    "amount": 50
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 4,
+  "fields": {
+    "recipe": 1,
+    "ingredient": 2181,
+    "amount": 60
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 5,
+  "fields": {
+    "recipe": 1,
+    "ingredient": 2113,
+    "amount": 45
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 6,
+  "fields": {
+    "recipe": 1,
+    "ingredient": 1646,
+    "amount": 135
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 7,
+  "fields": {
+    "recipe": 2,
+    "ingredient": 810,
+    "amount": 100
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 8,
+  "fields": {
+    "recipe": 2,
+    "ingredient": 1161,
+    "amount": 34
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 9,
+  "fields": {
+    "recipe": 2,
+    "ingredient": 2056,
+    "amount": 5
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 10,
+  "fields": {
+    "recipe": 2,
+    "ingredient": 1891,
+    "amount": 10
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 11,
+  "fields": {
+    "recipe": 2,
+    "ingredient": 1789,
+    "amount": 30
+  }
+},
+{
+  "model": "recipes.recipeingredient",
+  "pk": 12,
+  "fields": {
+    "recipe": 2,
+    "ingredient": 1684,
+    "amount": 1
   }
 }
 ]
