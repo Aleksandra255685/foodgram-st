@@ -8,7 +8,6 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('id', 'email', 'username', 'first_name', 'last_name')
     list_filter = ("username", "email")
     search_fields = ('email', 'username')
-    ordering = ('id',)
 
 
 @admin.register(Subscription)

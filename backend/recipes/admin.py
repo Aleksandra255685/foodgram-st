@@ -6,7 +6,7 @@ from .models import (
 
 class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
-    extra = 1
+    min_num = 1
 
 
 @admin.register(Recipe)
@@ -16,9 +16,9 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ('author', 'name')
     inlines = (RecipeIngredientInline,)
 
+    @admin.display(description="В избранном")
     def favorites_count(self, obj):
         return obj.favorited_by.count()
-    favorites_count.short_description = 'В избранном'
 
 
 @admin.register(Ingredient)

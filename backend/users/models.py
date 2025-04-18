@@ -1,26 +1,32 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
+from foodgram.constants import (USER_EMAIL_MAX_LENGTH,
+                                USER_MAX_LENGTH, USER_REGEX)
 
 
 class User(AbstractUser):
-    email = models.EmailField(max_length=254, unique=True,
-                              verbose_name="Электронная почта")
-    first_name = models.CharField(max_length=150, verbose_name="Имя")
-    last_name = models.CharField(max_length=150, verbose_name="Фамилия", )
-    avatar = models.ImageField(upload_to='avatars/', blank=True,
-                               null=True, verbose_name="Фото профиля")
-    username = models.CharField(max_length=150, unique=True,
-                                verbose_name="Имя пользователя",
-                                validators=[RegexValidator(
-                                    regex=r'^[\w.@+-]+$',
-                                    message='Имя пользователя некорректно.')])
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+
+    email = models.EmailField(max_length=USER_EMAIL_MAX_LENGTH, unique=True,
+                              verbose_name="Электронная почта")
+    first_name = models.CharField(max_length=USER_MAX_LENGTH,
+                                  verbose_name="Имя")
+    last_name = models.CharField(max_length=USER_MAX_LENGTH,
+                                 verbose_name="Фамилия", )
+    avatar = models.ImageField(upload_to='avatars/', blank=True,
+                               null=True, verbose_name="Фото профиля")
+    username = models.CharField(max_length=USER_MAX_LENGTH, unique=True,
+                                verbose_name="Имя пользователя",
+                                validators=[RegexValidator(
+                                    regex=USER_REGEX,
+                                    message='Имя пользователя некорректно.')])
 
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+        ordering = ("username",)
 
     def __str__(self):
         return self.username

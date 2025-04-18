@@ -50,7 +50,7 @@ docker compose exec backend python manage.py createsuperuser
 ```
 -  Заполните базу тестовыми данными:
 ```bash
-docker compose exec backend python manage.py loaddata db.json
+docker compose exec backend python manage.py load_ingredients ingredients.json
 ```
 - Загрузите статику:
 ```bash

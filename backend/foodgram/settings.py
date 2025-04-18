@@ -23,8 +23,7 @@ INSTALLED_APPS = [
     'djoser',
     'users',
     'recipes',
-    'api',
-    'core'
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -118,8 +117,8 @@ DJOSER = {
     "LOGIN_FIELD": "email",
     "HIDE_USERS": False,
     "SERIALIZERS": {
-        'user': 'users.serializers.CustomUserSerializer',
-        'current_user': 'users.serializers.CustomUserSerializer',
+        'user': 'api.serializers.CustomUserSerializer',
+        'current_user': 'api.serializers.CustomUserSerializer',
     },
     "PERMISSIONS": {
         "user": ["rest_framework.permissions.AllowAny"],
