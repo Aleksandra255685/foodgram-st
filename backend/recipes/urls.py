@@ -1,5 +1,5 @@
 from django.urls import path
-from backend.recipes.views import redirect_short_link
+from recipes.views import redirect_short_link
 
 app_name = "recipes"
 

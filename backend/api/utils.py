@@ -1,7 +1,7 @@
 from django.db.models import Sum
 from django.http import FileResponse
 from io import BytesIO
-from backend.recipes.models import RecipeIngredient
+from recipes.models import RecipeIngredient
 
 
 def get_shopping_list_ingredients(user):

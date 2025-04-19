@@ -2,12 +2,12 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from djoser.serializers import UserSerializer
 
-from backend.api.fields import Base64ImageField
+from api.fields import Base64ImageField
 from foodgram.constants import (RECIPE_MIN_COOKING_TIME,
                                 RECIPE_MAX_COOKING_TIME,
                                 INGREDIENT_MIN_AMOUNT,
                                 INGREDIENT_MAX_AMOUNT)
-from backend.recipes.models import (
+from recipes.models import (
     Ingredient, Recipe, RecipeIngredient,
     Favorite, ShoppingCart
 )
