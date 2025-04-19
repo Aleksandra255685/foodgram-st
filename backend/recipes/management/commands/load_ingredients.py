@@ -1,6 +1,6 @@
 import json
 from django.core.management.base import BaseCommand, CommandError
-from recipes.models import Ingredient
+from backend.recipes.models import Ingredient
 from django.db import IntegrityError
 from tqdm import tqdm
 

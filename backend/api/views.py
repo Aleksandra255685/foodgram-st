@@ -6,21 +6,21 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.filters import RecipeFilter
-from api.permissions import IsAuthorOrReadOnly
-from api.serializers import (RecipeReadSerializer,
-                             RecipeWriteSerializer,
-                             IngredientSerializer,
-                             CustomUserSerializer,
-                             SubscriptionSerializer,
-                             SubscriptionCreateSerializer,
-                             AvatarSerializer,
-                             FavoriteSerializer,
-                             ShoppingCartSerializer
-                             )
-from api.utils import generate_shopping_list_file
-from recipes.models import (Recipe, Ingredient,
-                            Favorite, ShoppingCart)
+from backend.api.filters import RecipeFilter
+from backend.api.permissions import IsAuthorOrReadOnly
+from backend.api.serializers import (RecipeReadSerializer,
+                                     RecipeWriteSerializer,
+                                     IngredientSerializer,
+                                     CustomUserSerializer,
+                                     SubscriptionSerializer,
+                                     SubscriptionCreateSerializer,
+                                     AvatarSerializer,
+                                     FavoriteSerializer,
+                                     ShoppingCartSerializer
+                                     )
+from backend.api.utils import generate_shopping_list_file
+from backend.recipes.models import (Recipe, Ingredient,
+                                    Favorite, ShoppingCart)
 from users.models import User, Subscription
 
 
