@@ -4,8 +4,8 @@ from io import BytesIO
 from recipes.models import RecipeIngredient
 
 
-def generate_shopping_list_file(user):
-    ingredients = (
+def get_shopping_list_ingredients(user):
+    return (
         RecipeIngredient.objects
         .filter(recipe__shopping_carts__user=user)
         .values('ingredient__name', 'ingredient__measurement_unit')
@@ -13,11 +13,17 @@ def generate_shopping_list_file(user):
         .order_by('ingredient__name')
     )
 
-    lines = [
+
+def render_shopping_list_text(ingredients):
+    return '\n'.join(
         f'{item["ingredient__name"]} — {item["total_amount"]} {item["ingredient__measurement_unit"]}'
         for item in ingredients
-    ]
-    content = '\n'.join(lines)
+    )
+
+
+def generate_shopping_list_file(user):
+    ingredients = get_shopping_list_ingredients(user)
+    content = render_shopping_list_text(ingredients)
 
     buffer = BytesIO()
     buffer.write(content.encode('utf-8'))

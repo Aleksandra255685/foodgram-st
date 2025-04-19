@@ -3,7 +3,10 @@ from rest_framework.exceptions import ValidationError
 from djoser.serializers import UserSerializer
 
 from api.fields import Base64ImageField
-from foodgram.constants import RECIPE_MIN_COOKING_TIME
+from foodgram.constants import (RECIPE_MIN_COOKING_TIME,
+                                RECIPE_MAX_COOKING_TIME,
+                                INGREDIENT_MIN_AMOUNT,
+                                INGREDIENT_MAX_AMOUNT)
 from recipes.models import (
     Ingredient, Recipe, RecipeIngredient,
     Favorite, ShoppingCart
@@ -41,7 +44,9 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit')
-    amount = serializers.IntegerField(min_value=1)
+    amount = serializers.IntegerField(
+        min_value=INGREDIENT_MIN_AMOUNT,
+        max_value=INGREDIENT_MAX_AMOUNT)
 
     class Meta:
         model = RecipeIngredient
@@ -65,20 +70,25 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             'is_favorited', 'is_in_shopping_cart',
         )
 
-    def get_is_favorited(self, obj):
+    def _check_user_relation(self, related_manager):
         user = self.context.get('request').user
         return (user.is_authenticated and
-                obj.favorites.filter(user=user).exists())
+                related_manager.filter(user=user).exists())
+
+    def get_is_favorited(self, obj):
+        return self._check_user_relation(obj.favorites)
 
     def get_is_in_shopping_cart(self, obj):
-        user = self.context.get('request').user
-        return (user.is_authenticated and
-                obj.shopping_carts.filter(user=user).exists())
+        return self._check_user_relation(obj.shopping_carts)
 
 
 class RecipeWriteSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(many=True)
     image = Base64ImageField()
+    cooking_time = serializers.IntegerField(
+        min_value=RECIPE_MIN_COOKING_TIME,
+        max_value=RECIPE_MAX_COOKING_TIME
+    )
 
     class Meta:
         model = Recipe
@@ -88,7 +98,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        ingredients_data = data.get('ingredients', [])
+        ingredients_data = self.initial_data.get('ingredients')
 
         if not ingredients_data:
             raise ValidationError(
@@ -102,22 +112,15 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
         return data
 
-    def validate_cooking_time(self, value):
-        if value < RECIPE_MIN_COOKING_TIME:
-            raise serializers.ValidationError(
-                f'Время готовки должно быть не менее {RECIPE_MIN_COOKING_TIME} минуты.')
-        return value
-
     def create_ingredients(self, recipe, ingredients):
-        bulk_list = [
+        RecipeIngredient.objects.bulk_create(
             RecipeIngredient(
                 recipe=recipe,
                 ingredient=item['id'],
                 amount=item['amount']
             )
             for item in ingredients
-        ]
-        RecipeIngredient.objects.bulk_create(bulk_list)
+        )
 
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')

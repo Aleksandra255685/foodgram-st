@@ -4,7 +4,8 @@ from django.conf import settings
 from foodgram.constants import (INGREDIENT_NAME_MAX_LENGTH,
                                 MEASUREMENT_UNIT_MAX_LENGTH,
                                 RECIPE_MAX_LENGTH,
-                                RECIPE_MIN_COOKING_TIME)
+                                RECIPE_MIN_COOKING_TIME,
+                                INGREDIENT_MIN_AMOUNT)
 
 
 class Ingredient(models.Model):
@@ -70,7 +71,12 @@ class RecipeIngredient(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE, verbose_name="Ингредиент")
-    amount = models.PositiveSmallIntegerField(verbose_name="Количество")
+    amount = models.PositiveSmallIntegerField(
+        verbose_name="Количество",
+        validators=[
+            MinValueValidator(INGREDIENT_MIN_AMOUNT),
+        ],
+    )
 
     class Meta:
         verbose_name = "Ингредиент в рецепте"

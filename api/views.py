@@ -61,9 +61,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def _remove_from(self, request, pk, model):
         recipe = get_object_or_404(Recipe, pk=pk)
-        obj = model.objects.filter(user=request.user, recipe=recipe).first()
-        if obj:
-            obj.delete()
+        deleted_count, _ = model.objects.filter(user=request.user, recipe=recipe).delete()
+        if deleted_count > 0:
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response({'errors': 'Рецепт не найден в списке.'},
                         status=status.HTTP_400_BAD_REQUEST)
@@ -112,19 +111,20 @@ class UserViewSet(DjoserUserViewSet):
 
     def _unsubscribe(self, request, id):
         author = get_object_or_404(User, pk=id)
-        subscription = Subscription.objects.filter(user=request.user,
-                                                   author=author)
-        if subscription.exists():
-            subscription.delete()
+        deleted_count, _ = Subscription.objects.filter(user=request.user,
+                                                   author=author).delete()
+        if deleted_count > 0:
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response({'error': 'Подписка не найдена.'},
                         status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=True, methods=['post', 'delete'],
+    @action(detail=True, methods=['post'],
             permission_classes=[IsAuthenticated], url_path='subscribe')
     def subscribe(self, request, id=None):
-        if request.method == 'POST':
-            return self._subscribe(request, id)
+        return self._subscribe(request, id)
+
+    @subscribe.mapping.delete
+    def unsubscribe(self, request, id=None):
         return self._unsubscribe(request, id)
 
     @action(detail=False, permission_classes=[IsAuthenticated],
